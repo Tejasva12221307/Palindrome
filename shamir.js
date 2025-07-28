@@ -1,11 +1,11 @@
 const fs = require('fs');
 
-// Convert from custom base to BigInt
+
 function convertToBigInt(base, value) {
   return BigInt(parseInt(value, parseInt(base)));
 }
 
-// Modular inverse using Extended Euclidean Algorithm
+
 function modInverse(a, m) {
   let m0 = m, x0 = 0n, x1 = 1n;
   if (m === 1n) return 0n;
@@ -19,7 +19,7 @@ function modInverse(a, m) {
   return x1 < 0n ? x1 + m0 : x1;
 }
 
-// Reconstruct the secret using Lagrange interpolation
+
 function reconstructSecret(shares, prime = 2n ** 521n - 1n) {
   let secret = 0n;
 
@@ -45,11 +45,11 @@ function reconstructSecret(shares, prime = 2n ** 521n - 1n) {
   return secret;
 }
 
-// Load and process the sample.json file
+
 const data = JSON.parse(fs.readFileSync('sample.json', 'utf8'));
 const k = data.keys.k;
 
-// Convert all shares from JSON
+
 const allShares = Object.entries(data)
   .filter(([key]) => key !== "keys")
   .map(([key, { base, value }]) => ({
@@ -57,9 +57,8 @@ const allShares = Object.entries(data)
     y: convertToBigInt(base, value)
   }));
 
-// Use two different sets of 7 shares
-const shares1 = allShares.slice(0, k);         // Shares 1 to 7
-const shares2 = allShares.slice(3, 3 + k);     // Shares 4 to 10
+const shares1 = allShares.slice(0, k);        
+const shares2 = allShares.slice(3, 3 + k);     
 
 const secret1 = reconstructSecret(shares1);
 const secret2 = reconstructSecret(shares2);
